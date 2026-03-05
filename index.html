@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KanbanFlow — Glassmorphism Board</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+  <div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="orb orb-4"></div>
+  </div>
+
+  <header class="app-header">
+    <div class="header-left">
+      <div class="logo">
+        <i class="fa-solid fa-layer-group"></i>
+        <span>KanbanFlow</span>
+      </div>
+      <div class="board-stats" id="boardStats"></div>
+    </div>
+    <div class="header-right">
+      <div class="search-wrap">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="searchInput" placeholder="Search tasks…" autocomplete="off" />
+        <button class="clear-search" id="clearSearch"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="filter-group">
+        <button class="filter-btn active" data-priority="all">All</button>
+        <button class="filter-btn" data-priority="high">🔴 High</button>
+        <button class="filter-btn" data-priority="medium">🟡 Med</button>
+        <button class="filter-btn" data-priority="low">🟢 Low</button>
+      </div>
+      <button class="theme-toggle" id="themeToggle">
+        <i class="fa-solid fa-moon"></i>
+      </button>
+    </div>
+  </header>
+
+  <main class="board-container">
+    <div class="board" id="board">
+
+      <div class="column" data-column="todo" id="col-todo">
+        <div class="column-header">
+          <div class="col-title-wrap">
+            <span class="col-dot dot-todo"></span>
+            <h2 class="col-title">Todo</h2>
+            <span class="col-count" id="count-todo">0</span>
+          </div>
+          <button class="add-task-btn" data-column="todo"><i class="fa-solid fa-plus"></i></button>
+        </div>
+        <div class="task-list" id="list-todo" data-column="todo">
+          <div class="drop-indicator"></div>
+        </div>
+      </div>
+
+      <div class="column" data-column="inprogress" id="col-inprogress">
+        <div class="column-header">
+          <div class="col-title-wrap">
+            <span class="col-dot dot-inprogress"></span>
+            <h2 class="col-title">In Progress</h2>
+            <span class="col-count" id="count-inprogress">0</span>
+          </div>
+          <button class="add-task-btn" data-column="inprogress"><i class="fa-solid fa-plus"></i></button>
+        </div>
+        <div class="task-list" id="list-inprogress" data-column="inprogress">
+          <div class="drop-indicator"></div>
+        </div>
+      </div>
+
+      <div class="column" data-column="done" id="col-done">
+        <div class="column-header">
+          <div class="col-title-wrap">
+            <span class="col-dot dot-done"></span>
+            <h2 class="col-title">Done</h2>
+            <span class="col-count" id="count-done">0</span>
+          </div>
+          <button class="add-task-btn" data-column="done"><i class="fa-solid fa-plus"></i></button>
+        </div>
+        <div class="task-list" id="list-done" data-column="done">
+          <div class="drop-indicator"></div>
+        </div>
+      </div>
+
+      <div class="add-column-wrap">
+        <button class="add-column-btn" id="addColumnBtn">
+          <i class="fa-solid fa-plus"></i>
+          <span>Add Column</span>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Task Modal -->
+  <div class="modal-overlay" id="taskModal">
+    <div class="modal glass-modal">
+      <div class="modal-header">
+        <h3 id="modalTitle">New Task</h3>
+        <button class="modal-close" id="modalClose"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Task Title <span class="required">*</span></label>
+          <input type="text" id="taskTitle" placeholder="Enter task title…" maxlength="100" />
+          <span class="char-count" id="titleCount">0/100</span>
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="taskDesc" placeholder="Add a description (optional)…" maxlength="500" rows="3"></textarea>
+          <span class="char-count" id="descCount">0/500</span>
+        </div>
+        <div class="form-row">
+          <div class="form-group half">
+            <label>Priority</label>
+            <div class="priority-selector" id="prioritySelector">
+              <button class="priority-opt" data-p="low">🟢 Low</button>
+              <button class="priority-opt active" data-p="medium">🟡 Med</button>
+              <button class="priority-opt" data-p="high">🔴 High</button>
+            </div>
+          </div>
+          <div class="form-group half">
+            <label>Color Tag</label>
+            <div class="color-selector" id="colorSelector">
+              <button class="color-opt active" data-color="default" style="background:rgba(255,255,255,0.2)"></button>
+              <button class="color-opt" data-color="rose" style="background:#ff6b9d"></button>
+              <button class="color-opt" data-color="amber" style="background:#fbbf24"></button>
+              <button class="color-opt" data-color="emerald" style="background:#34d399"></button>
+              <button class="color-opt" data-color="sky" style="background:#38bdf8"></button>
+              <button class="color-opt" data-color="violet" style="background:#a78bfa"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="modalCancel">Cancel</button>
+        <button class="btn-primary" id="modalSave"><i class="fa-solid fa-check"></i> Save Task</button>
+      </div>
+      <input type="hidden" id="editingTaskId" />
+      <input type="hidden" id="editingColumn" />
+    </div>
+  </div>
+
+  <!-- Add Column Modal -->
+  <div class="modal-overlay" id="columnModal">
+    <div class="modal glass-modal small-modal">
+      <div class="modal-header">
+        <h3>New Column</h3>
+        <button class="modal-close" id="colModalClose"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Column Name <span class="required">*</span></label>
+          <input type="text" id="newColName" placeholder="e.g. Review, Testing…" maxlength="30" />
+        </div>
+        <div class="form-group">
+          <label>Dot Color</label>
+          <div class="color-selector" id="colColorSelector">
+            <button class="color-opt active" data-color="#a78bfa" style="background:#a78bfa"></button>
+            <button class="color-opt" data-color="#38bdf8" style="background:#38bdf8"></button>
+            <button class="color-opt" data-color="#34d399" style="background:#34d399"></button>
+            <button class="color-opt" data-color="#fbbf24" style="background:#fbbf24"></button>
+            <button class="color-opt" data-color="#ff6b9d" style="background:#ff6b9d"></button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="colModalCancel">Cancel</button>
+        <button class="btn-primary" id="colModalSave"><i class="fa-solid fa-plus"></i> Add Column</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirm Modal -->
+  <div class="modal-overlay" id="deleteModal">
+    <div class="modal glass-modal small-modal">
+      <div class="modal-header">
+        <h3>Delete Task</h3>
+        <button class="modal-close" id="deleteModalClose"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <p class="delete-msg">Are you sure you want to delete <strong id="deleteTaskName"></strong>? This cannot be undone.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="deleteCancelBtn">Cancel</button>
+        <button class="btn-danger" id="deleteConfirmBtn"><i class="fa-solid fa-trash"></i> Delete</button>
+      </div>
+      <input type="hidden" id="deletingTaskId" />
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
